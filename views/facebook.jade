@@ -1,0 +1,75 @@
+extends layout
+
+block content
+    div.row-fluid
+        h1.app-name The Gift List
+    div.row-fluid.visible-phone
+        div.span12
+            h2 Menu
+            select#section
+                option(value='0') #{username} Wishlist
+                option(value='1') Friends
+                option(value='2') Shopping Lists
+    div.row-fluid
+        div#wishlistSection.span4.jqSection           
+            h2 #{username} Wishlist
+                span#addItemJump.circle +
+            ul#yourList.unstyled
+                each prop in myList
+                    li 
+                        h3 #{prop.item.name}
+                        div.item_desc Show Description
+                        p.item_data #{prop.item.desc}
+                        if prop.item.link
+                            div.link_container
+                                a(href=prop.item.link, target='_BLANK') Link to Item
+                        input(type='button', value='Search Amazon', class='btn btn-small btnAmazon')
+                        input(type='button', value='Add To Shopping List', class='btn btn-small bntAddToList' )
+                        input(type='button', value='Find Locally', class='btn btn-small btnFindLocal' )
+                        input(type='hidden', class='itemId', value='#{prop._id}')
+                        div.results
+            
+            h2#addItemSection Add Item
+            label Name
+            input(type='text', id='itemName')
+            label Description
+            textarea#itemDesc
+            label Link *Optional
+            input(type='text', id='itemLink')
+            div
+                button#btnAddItem.btn.btn-success.btn-large Add
+        div#friendSection.span4.hidden-phone.jqSection
+            h2 Friends
+                span#findFriendJump.circle +
+            ul#friendList.unstyled
+                each friend in friendList
+                    li 
+                        h3.jqFriend #{friend.friendName}
+                        input(type='hidden', class='friendId', value='#{friend._id}')
+            h2#findFriendSection Find Friend
+            label E-Mail
+            input(type='text', id='friendEmail')
+            div
+                button#btnFindFriend.btn.btn-success.btn-large Search
+        div#shoppingListSection.span4.hidden-phone.jqSection
+            h2 My Created Lists
+                span#createListJump.circle +
+            ul#createdLists.unstyled
+                each shoppingList in shoppingLists
+                    li.shopping-list-item #{shoppingList.name}
+                        input(type='hidden', class='shopping-list-val', value='#{shoppingList._id}')                      
+            h2 Shopping List 
+                span#displayListName
+            ul#displayList.unstyled
+            h2#createListSection Create a List
+            input(type='hidden', id='listId')
+            input(type='text', id='listName')
+            div
+                input(type='button', class='btn btn-large btn-success', id='btnCreateList', value='Create List')
+        ul#createdListsAdd.unstyled
+            each shoppingList in shoppingLists
+                li.shopping-list-item #{shoppingList.name}
+                    input(type='hidden', class='shopping-list-val', value='#{shoppingList._id}')
+block scripts
+    script(src='/javascripts/dashboard.js')
+        

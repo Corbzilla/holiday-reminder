@@ -1,0 +1,108 @@
+extends layout
+
+block content
+  div#fb-root
+    script
+        // Load the SDK Asynchronously
+        (function(d){
+           var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+           if (d.getElementById(id)) {return;}
+           js = d.createElement('script'); js.id = id; js.async = true;
+           js.src = "//connect.facebook.net/en_US/all.js";
+           ref.parentNode.insertBefore(js, ref);
+         }(document));
+        window.fbAsyncInit = function() {
+          FB.init({
+            appId      : '368684593212563', // App ID
+            //channelUrl : 'holidayreminder.challetwoods.c9.io/channel.html', // Channel File (optional, should be added in production
+            status     : true, // check login status
+            cookie     : true, // enable cookies to allow the server to access the session
+            xfbml      : true  // parse XFBML
+          });
+          // Additional initialization code here
+          // listen for and handle auth.statusChange events
+          FB.Event.subscribe('auth.statusChange', function(response) {
+              if (response.authResponse) {
+                // user has auth'd your app and is logged into Facebook
+                FB.api('/me', function(me){
+                  if (me) {
+                    var username = me.name;
+                    var email = me.email;
+                    var password = 'fb_user';
+                    var fbId = me.id
+                    var data = {
+                        username: username,
+                        password: password,
+                        email: email,
+                        fbId: fbId
+                    };
+
+                    FB.api('/me/friends', function(friends){
+                        if(friends){
+                            data.friends = friends.data;
+                            $.ajax({
+                                url: '/fbsignin',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                dataType: 'json',
+                                data: JSON.stringify(data),
+                                success: function(response){
+                                    window.location.href = '/dashboard';
+                                },
+                                error: function(response){
+                                    
+                                }
+                            });
+                        }
+                    });
+                    
+                  }
+                });
+                
+              } else {
+                // user has not auth'd your app, or is not logged into Facebook
+                
+              }
+          });
+        };
+  div.row-fluid
+    div.span12
+        h1.app-name Gifter
+  div.row-fluid
+    div.span4
+        h2 Sign In
+        label E-Mail 
+        input(id='userName', type='text')
+        label Password 
+        input(id='passWord', type='password')
+        div
+            input(type='button', id='btnSignIn', class='btn btn-success btn-large', value='Sign In')
+        div#signInErr.error There was an error signing in
+        div(class='fb-login-button', scope='email')
+        a(href='/twittersignin', class='twitter-logo')
+    div.span4
+        h2 Friends Lists
+        label Friends E Mail 
+        input(id='email', type='text')
+        div
+            input(type='button', id='btnCheckFriends', class='btn btn-success btn-large', value='Find List')
+    div.span4
+        h2 Register
+        label User Name 
+        input(id='regName', type='text')
+        label E -Mail
+        input(id='regEmail', type='text')
+        label Password 
+        input(id='regPass', type='password')
+        label Confirm Password 
+        input(id='regConfirm', type='password')
+        div#passErr.error Passwords must match
+        div
+            input(type='button', id='btnRegister', class='btn btn-success btn-large', value='Register')
+        div#regErr.error There was a problem when registering
+  div.row-fluid
+    div.span12
+        p Use the forms above to either sign in and create a list for your friends to check out and blah blah blah
+        
+block scripts
+    script(src='/javascripts/index.js')

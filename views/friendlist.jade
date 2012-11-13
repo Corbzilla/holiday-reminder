@@ -1,0 +1,30 @@
+extends layout
+
+block content
+    div.fluid-row
+        div.span12
+            h1 Your Friends List
+            ul#friendList.unstyled
+                each prop in friendList
+                    if !prop.purchased
+                        li 
+                            h3 #{prop.item.name}
+                            div.item_desc Show Description
+                            p.item_data #{prop.item.desc}
+                            if prop.item.link
+                                div.link_container
+                                    a(href='prop.item.link', target='_BLANK') Link to Item
+                            input(type='button', class='btn btn-small btnMarked', value='Mark as Purchased')
+                            input(type='hidden', class='itemId', value='#{prop._id}')
+            if auth
+                input(type='button', id='btnAddList', class='btn btn-success btn-large', value='Add Friends List')
+                input(type='hidden', id='friend', value='#{friend}')
+        div.span12
+            h2 Check Another
+            label E-Mail
+            input(type='text', id='email')
+            div
+                input(type='button', id='btnCheckFriends', class='btn btn-success btn-large', value='Check')
+
+block scripts
+    script(src='../javascripts/check.js')

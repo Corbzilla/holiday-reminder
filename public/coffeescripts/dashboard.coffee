@@ -9,5 +9,6 @@ class DashBoard
         @jumpAddItem = new QuickJump("#findFriendJump", "#findFriendSection")
         @jumpAddItem = new QuickJump("#createListJump", "#createListSection")
         @markPurchased = new AddFriendList("#na", "#na", ".btnMarked")
+        Utility.btnDisable()
         
 dash = new DashBoard()

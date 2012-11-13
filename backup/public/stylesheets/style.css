@@ -1,0 +1,11 @@
+h1 {
+    text-align: center;
+}
+
+.item_desc{
+    display: none;
+}
+
+.error{
+    display: none;
+}

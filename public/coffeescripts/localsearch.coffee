@@ -11,7 +11,8 @@ class LocalSearch
                 @longitude = position.coords.longitude
                 return
     search: (evt) =>
-        parent = $(evt.currentTarget).parent()
+        btn = $(evt.currentTarget)
+        parent = btn.parent()
         item = parent.find("h3")
         keywords = item.text()
         keywords = keywords.replace /\s/g, "+"
@@ -21,6 +22,7 @@ class LocalSearch
             keywords: keywords
         Utility.ajaxOptions.url = "/searchretailigence"
         Utility.ajaxOptions.success = (response) ->
+            btn.removeClass("disabled")
             if response.RetailigenceSearchResult
                 results = response.RetailigenceSearchResult
                 resultCount = results.count
@@ -60,6 +62,7 @@ class LocalSearch
                     parent.find(".results").append("<div class='no_results'>Nothing Found Locally</div>")
             return
         Utility.ajaxOptions.error = () ->
+            btn.removeClass("disabled")
             return
         Utility.ajaxOptions.data = JSON.stringify(data)
         $.ajax(Utility.ajaxOptions)

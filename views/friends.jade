@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    div.row-fluid
+        div.span12
+            h2 Friends
+            ul#friendList
+                each prop in friendList
+                    li 
+                        h3.jqFriend #{prop.friendName}
+                        input(type='hidden', class='friendId', value='#{prop._id}')

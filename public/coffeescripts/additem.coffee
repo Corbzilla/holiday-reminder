@@ -6,20 +6,23 @@ class ItemList
         @desc = $(desc)
         @link =$(link)
         $(btn).on("click", @add)
-        $(list).on("mouseenter", "li", @showDesc).on("mouseleave", "li", @hideDesc)
-        $(list).on("click", "li", @holdDesc)
+        $("body").on("click", ".item_desc", @showDesc)
+        ##$(list).on("click", "li", @holdDesc)
         $("body").on("click", ".btnAmazon", @amazonSearch)
         $("#results").on("click", ".amazon-result", @loadAmazonResult)
         $("body").on("click", ".bntAddToList", @displayShoppingList)
         $("#createdListsAdd").on("click", "li", @addToShoppingList)
+        $("body").on("click", ".jqAmazon-link", @addLink)
     add: () =>
         item = 
             name: @name.val()
             desc: @desc.val()
             link: @link.val()
-        itemOut = $("<li><h3>" + item.name + "</h3><div class='item_desc'>"  +item.desc + "</div></li>");
+        itemOut = $("<li><h3>" + item.name + "</h3><div class='item_desc'>Show Description</div><div class='item_data'>"  +item.desc + "</div></li>");
         if item.link
-            itemLink = "<a href='http://" + item.link + "' target='_BLANK'>Link To Item</a>"
+            itemLink = "<div class='link_container'>"
+            itemLink += "<a href='http://" + item.link + "' target='_BLANK'>Link To Item</a>"
+            itemLink += "</div>"
             itemOut.append(itemLink)
         itemOut.append("<input type='button' class='btnAmazon btn btn-small' value='Search Amazon' />")
         itemOut.append("<input type='button' class='btn btn-small bntAddToList' value='Add to Shopping List' />")
@@ -47,14 +50,20 @@ class ItemList
         @link.val("")
         return
     showDesc: () ->
-        item = $(@)
-        itemDesc = item.find('.item_desc')
-        itemDesc.show();
-        return
-    hideDesc: () ->
-        item = $(@)
-        itemDesc = item.find('.item_desc')
-        itemDesc.hide()
+        el = $(@)
+        isVisible = el.data("visible") or false
+        text = ""        
+        item = el.parent()
+        itemDesc = item.find('.item_data')
+        if not isVisible
+            text = "Hide Description"
+            itemDesc.show();
+            el.data("visible", true)
+        else
+            text = "Show Description"
+            itemDesc.hide();
+            el.data("visible", false)
+        el.text(text)
         return
     holdDesc: () ->
         item = $(@)
@@ -72,7 +81,8 @@ class ItemList
         list.on("click", "li", @holdDesc)
         return
     amazonSearch: () ->
-        item = $(@).parent()
+        btn = $(@)
+        item = btn.parent()
         keywords = item.find("h3").text()
         data =
             keywords: keywords
@@ -80,9 +90,17 @@ class ItemList
         Utility.ajaxOptions.success = (response) ->
             ## add search results to page
             if response
+                btn.removeClass("disabled")
                 parent = item
-                parent.find(".results").empty()
-                parent.find(".results").append("<h3>Amazon Results</h3>")
+                results = parent.find(".results")
+                results.empty()
+                linkCss = "jqAmazon-link"
+                container = results.parent().parent()
+                tooltipText = "Click here to add this link to help your friends find the item."
+                if container.attr("id") == "displayList"
+                    linkCss = "jqShopping-link"
+                    tooltipText = "Click here to add this link to help you find the item, your friend will not see this."
+                results.append("<h3>Amazon Results</h3>")
                 items = response.ItemSearchResponse.Items[0].Item
                 for item, i in items
                     if item.DetailPageURL
@@ -94,11 +112,13 @@ class ItemList
                             if itemListPrice
                                 itemFormattedPrice = " suggested retail price" + itemListPrice[0].FormattedPrice[0]
                             else
-                                itemFormattedPrice = " no suggested price"
-                        href = "<div><a href='" + url + "' class='amazon-result'>" + itemTitle + "</a>" + itemFormattedPrice + "</div>"
+                                itemFormattedPrice = " no suggested price"                        
+                        href = "<div><span class='small-circle " + linkCss + "' rel='tooltip' data-original-title='" + tooltipText + "'>+</span><a href='" + url + "' class='amazon-result'>" + itemTitle + "</a>" + itemFormattedPrice + "</div>"
                         parent.find(".results").append(href)
+                $("[rel=tooltip]").tooltip();
             return
         Utility.ajaxOptions.error = () ->
+            btn.removeClass("disabled")
             return
         Utility.ajaxOptions.data = JSON.stringify(data)
         $.ajax(Utility.ajaxOptions)
@@ -124,6 +144,27 @@ class ItemList
             itemId: itemId
         Utility.ajaxOptions.url ="/posttoshoppinglist"
         Utility.ajaxOptions.success = () ->
+            $("#createdListsAdd").hide()
+            parent.find(".bntAddToList").removeClass("disabled")
+            return
+        Utility.ajaxOptions.error = () ->
+            $("#createdListsAdd").hide()
+            parent.find(".bntAddToList").removeClass("disabled")
+            return
+        Utility.ajaxOptions.data = JSON.stringify(data)
+        $.ajax(Utility.ajaxOptions)
+        return
+    addLink: () ->
+        linkContainer = $(@).parent()
+        item = linkContainer.parent().parent()
+        link = linkContainer.find("a").attr("href")
+        itemId = item.find(".itemId").val()
+        data =
+            link: link
+            itemId: itemId
+        Utility.ajaxOptions.url ="/addlink"        
+        Utility.ajaxOptions.success = () ->
+            item.find(".item_desc").after("<a href='http://" + data.link + "' target='_BLANK'>Link To Item</a>")
             return
         Utility.ajaxOptions.error = () ->
             return

@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    div.fluid-row
+        div.span12
+            h1 Your Friends List
+            ul#friendList
+        div.span12
+            h2 Check Another
+            label E-Mail
+            input(type='text', id='email')
+            input(type='button', id='btnCheckFriends', class='btn btn-success btn-large')

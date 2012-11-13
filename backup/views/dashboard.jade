@@ -1,0 +1,23 @@
+extends layout
+
+block content
+    div.row-fluid
+        div.span6
+            h2 #{username} Wishlist
+            ul#yourList.unstyled
+            h2 Add Item
+            label Name
+            input(type='text', id='itemName')
+            label Description
+            textarea#itemDesc
+            label Link *Optional
+            input(type='text', id='itemLink')
+            div
+                button#btnAddItem.btn.btn-success.btn-large Add
+        div.span6
+            h2 Friends
+            ul#friendList
+
+block scripts
+    script(src='/javascripts/dashboard.js')
+        

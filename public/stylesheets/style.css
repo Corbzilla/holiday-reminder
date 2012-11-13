@@ -1,0 +1,125 @@
+body {
+  padding: 50px;
+  /*font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;*/
+  font: 14px "Ubuntu", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.error{
+    display: none;
+}
+
+h1.app-name{
+    font-weight: 700;
+    font-family: 'Mountains of Christmas', cursive;
+    width: 100%;
+    text-align: center;
+    font-size: 90px;
+}
+
+#yourList {
+    margin-left: 5px;
+}
+
+li {
+    background: green;
+    border: 1px solid red;
+    border-radius: 4px;
+    margin: 7px 0px;
+    padding: 10px;
+    box-shadow: 0 2px 2px 2px;
+}
+
+li .btn{
+    font-weight: bold;
+    margin-right: 2px;
+    margin-top: 2px;
+}
+
+.item_desc {
+    margin: 5px;
+    padding: 5px;
+    font-size: 16px;
+    font-style: italic;
+    color: #00B7FF;
+    cursor: pointer;
+}
+
+.item_data{
+    margin: 5px;
+    padding: 5px;
+    display: none;
+}
+
+.link_container {
+    margin: 5px;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.shopping-list-link {
+    display: block;
+    margin-bottom: 10px;
+    background: #A65600;
+    padding: 4px;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.results div {
+    background: #A65600;
+    font-size: 12px;
+    padding: 5px;
+    margin: 5px auto;
+    border-radius: 5px;
+    box-shadow: 0 2px 2px 2px;
+}
+
+.small-circle {
+    text-align: center;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#createdListsAdd{
+    display:none;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.circle{
+    font-size: 27px;
+    border-radius: 21px;
+    border: 1px solid green;
+    padding: 0px 13px;
+    color: green;
+    float: right;
+}
+
+.twitter-logo {
+    background: url('/stylesheets/images/sign-in-with-twitter-d.png') no-repeat scroll 0 0 transparent;
+    padding-top: 23px;
+    padding-right: 151px;
+    display: block;
+}
+
+.facebook-f {
+    background: url('/stylesheets/images/facebook_f.png') no-repeat scroll 0 0 transparent;
+    padding-top: 38px;
+    padding-right: 38px;
+    display: block;
+}
+
+@media (max-width: 400px){
+    h1.app-name {
+        font-size: 50px;
+    }
+}

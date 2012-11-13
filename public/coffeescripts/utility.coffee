@@ -1,5 +1,5 @@
 class Utility
-    constructor: () ->
+    constructor: () ->        
     @ajaxOptions =
         url: "/"
         type: "POST"
@@ -9,3 +9,10 @@ class Utility
             return
         error: () ->
             return
+        complete: () ->
+            return
+    @btnDisable = () ->
+        $("body").on "click", ".btn:not(.btn-success)",() ->
+            $(@).addClass("disabled")
+            return
+        return

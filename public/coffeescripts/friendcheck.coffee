@@ -4,7 +4,8 @@ class FriendCheck
         @btnCheckFriends = $(btn)
         @btnCheckFriends.on("click", @submit)
         $(".jqFriend").on("click", @submitFriend)
-        $("#btnFindFb").on("click", @checkFacebook)
+        $("body").on("click", ".jqFbFriend", @submitFbFriend)
+        ##$("#btnFindFb").on("click", @checkFacebook)
         @redirect = redirect
     submit: () =>
         data = 
@@ -25,9 +26,11 @@ class FriendCheck
         getFriendSuccess = (response) ->
             if response
                 for item, i in response
-                    itemOut = $("<li><h3>" + item.item.name + "</h3><div class='item_desc'>"  +item.item.desc + "</div></li>");
+                    itemOut = $("<li><h3>" + item.item.name + "</h3><div class='item_desc'>Show Description</div><div class='item_data'>"  + item.item.desc + "</div></li>");
                     if item.link
-                        itemLink = "<a href='http://" + item.item.link + "' target='_BLANK'>Link To Item</a>"
+                        itemLink = "<div class='link_container'>"
+                        itemLink += "<a href='http://" + item.item.link + "' target='_BLANK'>Link To Item</a>"
+                        itemLink += "</div>"
                         itemOut.append(itemLink)
                     itemOut.append("<input type='button' class='btnAmazon btn btn-small' value='Search Amazon' />")
                     itemOut.append("<input type='button' class='btn btn-small bntAddToList' value='Add to Shopping List' />")
@@ -40,6 +43,36 @@ class FriendCheck
         getFriendError = () ->
             return
         Utility.ajaxOptions.url ="/getfriendlist"
+        Utility.ajaxOptions.success = getFriendSuccess
+        Utility.ajaxOptions.error = getFriendError
+        Utility.ajaxOptions.data = JSON.stringify(data)
+        $.ajax(Utility.ajaxOptions)
+        return
+    submitFbFriend: () ->
+        friend = $(@).siblings('.friendId')
+        friendId = friend.val()
+        data =
+            matchId: friendId
+        getFriendSuccess = (response) ->
+            if response
+                for item, i in response
+                    itemOut = $("<li><h3>" + item.item.name + "</h3><div class='item_desc'>Show Description</div><div class='item_data'>"  + item.item.desc + "</div></li>");
+                    if item.link
+                        itemLink = "<div class='link_container'>"
+                        itemLink += "<a href='http://" + item.item.link + "' target='_BLANK'>Link To Item</a>"
+                        itemLink += "</div>"
+                        itemOut.append(itemLink)
+                    itemOut.append("<input type='button' class='btnAmazon btn btn-small' value='Search Amazon' />")
+                    itemOut.append("<input type='button' class='btn btn-small bntAddToList' value='Add to Shopping List' />")
+                    itemOut.append("<input type='button' class='btn btn-small btnFindLocal' value='Find Locally' />")
+                    itemOut.append("<input type='button' class='btn btn-small btnMarked' value='Mark as Purchased' />")
+                    itemOut.append("<input type='hidden' class='itemId' value='" + item._id + "' />")
+                    itemOut.append("<div class='results'></div>")
+                    friend.parent().append(itemOut)
+            return
+        getFriendError = () ->
+            return
+        Utility.ajaxOptions.url ="/getfbfriendlist"
         Utility.ajaxOptions.success = getFriendSuccess
         Utility.ajaxOptions.error = getFriendError
         Utility.ajaxOptions.data = JSON.stringify(data)

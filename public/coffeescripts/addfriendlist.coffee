@@ -3,6 +3,7 @@ class AddFriendList
         @value = $(value)
         $(btn).on "click", @add
         $(btnPurchased).on "click", @markPurchased
+        $(".btnAddFbFriend").on("click", @addFbFriend)
     add: () =>
         data =
             friend: @value.val()
@@ -39,3 +40,14 @@ class AddFriendList
         Utility.ajaxOptions.data = JSON.stringify(data)
         $.ajax Utility.ajaxOptions
         return
+    addFbFriend: () ->
+        matchId = $(@).siblings("friendId").val()
+        data =
+            matchId: matchId
+        Utility.ajaxOptions.url ="/addfbfriendlist"
+        Utility.ajaxOptions.success = (response) ->
+            return
+        Utility.ajaxOptions.error = (response) ->
+            return
+        Utility.ajaxOptions.data = JSON.stringify(data)
+        $.ajax Utility.ajaxOptions
